@@ -1,0 +1,72 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CZebraDWProfilePluginScanner
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x1bb3404900db2317
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAAALSdSBgBmcGbDkgCZMZzT+6I661YWBQhwt/uW8/IeAEBArHZFha2b7TaUeFII0NIQpiF28GP6Cdsu10HoTkpvUSMzF2Sp3JjyGIxoQHFx0ZTYCijF+KsQ9PunVSHzx3kg/ILw0NVlCL7ONKYHoPkEj3hlw1xEQ637rL0qv2/D8RsLn6Bpj0Hb6bL0dGIM+LgPoozD4MTuMX/Xw3AVXF00E0Cp+JFZE7q7TnOAtdrBEF11rWv7u1wXuvokM+kebPrfutsW0lvPI2GCJJMm380/7mBD6eJOtmYlj
+     code : |1-
+      CZebraDWProfilePluginScanner est une Classe, Sérialise = "PluginScanner"
+      	m_bscanner_input_enabled est un booléen = Vrai, Sérialise = "scanner_input_enabled"
+      	m_sscanner_selection est une chaîne = "auto", Sérialise = "scanner_selection"
+      	m_escanner_selection_by_identifier est un ESCANNER_IDENTIFIER, Sérialise = "scanner_selection_by_identifier"
+      	m_clDecoders est un CZebraDWProfilePluginScannerDecoders, Sérialise = "Decoders"
+      	m_clDecodersParams est un CZebraDWProfilePluginScannerDecodersParams, Sérialise = "DecodersParams"
+      	m_clUpcEan est un CZebraDWProfilePluginScannerUpcEan, Sérialise = "UpcEan"	
+      	m_clReaderParams est un CZebraDWProfilePluginScannerReaderParams, Sérialise = "ReaderParams"
+      	m_clScanParams est un CZebraDWProfilePluginScannerScanParams, Sérialise = "ScanParams"	
+      	m_clMultiBarcodes est un CZebraDWProfilePluginScannerMultiBarcodes, Sérialise = "MultiBarcodes"
+      FIN
+      
+      ESCANNER_IDENTIFIER est une énumération
+      	AUTO = "AUTO"  //Automatic scanner selection
+      	INTERNAL_IMAGER = "INTERNAL_IMAGER"  //Built-in imager scanner
+      	INTERNAL_LASER = "INTERNAL_LASER"  //Built-in laser scanner
+      	INTERNAL_CAMERA = "INTERNAL_CAMERA"  //Built-in camera scanner
+      	SERIAL_SSI = "SERIAL_SSI"  //Pluggable Z-back scanner for ET50/ET55
+      	BLUETOOTH_SSI = "BLUETOOTH_SSI"  //RS507 Bluetooth scanner
+      	BLUETOOTH_RS6000 = "BLUETOOTH_RS6000"  //RS6000 Bluetooth scanner
+      	BLUETOOTH_DS3678 = "BLUETOOTH_DS3678"  //DS3678 Bluetooth scanner
+      	PLUGABLE_SSI = "PLUGABLE_SSI"  //Serial SSI scanner RS429 (for use with WT6000)
+      	PLUGABLE_SSI_RS5000 = "PLUGABLE_SSI_RS5000"  //Serial SSI scanner RS5000 (for use with WT6000)
+      	USB_SSI_DS3608 = "USB_SSI_DS3608" //DS3608 pluggable USB scanner
+      fin
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 1996009742146478871
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructeur()
+      m_escanner_selection_by_identifier = ESCANNER_IDENTIFIER.AUTO
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 1996009742146544407
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructeur()
+      
+     type : 655360
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x1fc7bfb5044ecc7c
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

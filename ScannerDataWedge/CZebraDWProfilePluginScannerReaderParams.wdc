@@ -1,0 +1,136 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CZebraDWProfilePluginScannerReaderParams
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x1bb3666e01032218
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAAB5UKGFj63eZTk6ey2Gln6jksxCiLVoiJm5YrQalmnfeVhlvRUMu5EfyiG6e7XkGYQLz+l3LKX6H7D5TUafR/fU9VnNVZRjncOJct6j3etSGbPomeOdO52kdX7LZcPbqmxR/WroyisnXsosx8xpnMayiUBMDP4zUCBpopqzBrv2dQ==
+     code : |1-
+      CZebraDWProfilePluginScannerReaderParams est une Classe, sérialise = "ReaderParams"
+      	m_eaim_mode est un SC_E_AIM_MODE, Sérialise = "aim_mode"
+      	m_echarset_name est un SC_E_CHARSET_NAME, Sérialise = "charset_name"
+      	m_eillumination_mode est un SC_E_ILLUMINATION_MODE, Sérialise = "illumination_mode"
+      	m_einverse_1d_mode est un SC_E_INVERSE1DMODE_MODE, Sérialise = "inverse_1d_mode"
+      	m_elcd_mode est un SC_E_LCD_MODE, Sérialise = "lcd_mode"
+      	m_elinear_security_level est un SC_E_LINEAR_SECURITY_LEVEL, Sérialise = "linear_security_level"
+      	m_nlow_power_timeout est un entier = 250, Sérialise = "low_power_timeout" //0-1000
+      	m_epicklist est un SC_E_PICKLIST_MODE, Sérialise = "picklist"
+      	m_epoor_quality_bcdecode_effort_level est un SC_E_POOR_QUALITY_DECODE_LEVEL, Sérialise = "poor_quality_bcdecode_effort_level"
+      	m_naim_timer est un entier = 500, Sérialise = "aim_timer" //0-60000
+      	m_eaim_type est un SC_E_AIM_TYPE, Sérialise = "aim_type"
+      	m_nbeam_timer est un entier = 5000, Sérialise = "beam_timer" //0-60000
+      	m_ndifferent_barcode_timeout est un entier = 500, Sérialise = "different_barcode_timeout" //0-5000 doit être un multiple de 500
+      	m_nsame_barcode_timeout est un entier = 500, Sérialise = "same_barcode_timeout" //0-5000 doit être un multiple de 500
+      	m_escanning_mode est un SC_E_SCANNINGMODE, Sérialise = "scanning_mode"
+      FIN
+      
+      SC_E_AIM_MODE est une énumération
+      	_ON	= "on"
+      	OFF	= "off"
+      fin
+      
+      SC_E_CHARSET_NAME est une énumération
+      	ISO_8859_1	 = "ISO-8859-1"
+      	Shift_JIS	 = "Shift_JIS"
+      	UTF_8		 = "UTF-8"
+      fin
+      
+      SC_E_ILLUMINATION_MODE est une énumération
+      	OFF = "off"
+      	_ON = "torch"
+      fin
+      
+      SC_E_INVERSE1DMODE_MODE est une énumération
+      	DISABLE	 = "0"
+      	ENABLE	 = "1"
+      	AUTO	 = "2"
+      fin
+      
+      SC_E_LCD_MODE est une énumération
+      	DISABLED = "0"
+      	ENABLED	 = "3"
+      fin
+      
+      SC_E_LINEAR_SECURITY_LEVEL est une énumération
+      	SECURITY_SHORT_OR_CODABAR	 = "1"
+      	SECURITY_ALL_TWICE			 = "2"
+      	SECURITY_LONG_AND_SHORT		 = "3"
+      	SECURITY_ALL_THRICE			 = "4"
+      fin
+      
+      SC_E_PICKLIST_MODE est une énumération
+      	DISABLED					 = "0"
+      	HARDWARE_PICKLIST_ENABLED	 = "1"
+      	SOFTWARE_PICKLIST_ENABLED	 = "2"
+      fin
+      
+      SC_E_POOR_QUALITY_DECODE_LEVEL est une énumération
+      	SECURITY_LEVEL_0 = "0"
+      	SECURITY_LEVEL_1 = "1"
+      	SECURITY_LEVEL_2 = "2"
+      	SECURITY_LEVEL_3 = "3"
+      fin
+      
+      SC_E_AIM_TYPE est une énumération
+      	TRIGGER				 = "0"
+      	TIMED_HOLD			 = "1"
+      	TIMED_RELEASE		 = "2"
+      	PRESS_AND_RELEASE	 = "3"
+      	CONTINUOUS_READ		 = "4"
+      	PRESS_AND_SUSTAIN	 = "5"
+      fin
+      
+      SC_E_SCANNINGMODE est une énumération
+      	SINGLE		 = "1"
+      	UDI			 = "2"
+      	MULTIBARCODE = "3"
+      fin
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 1996051682504745496
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructeur()
+      m_eaim_mode = SC_E_AIM_MODE._ON
+      m_echarset_name = SC_E_CHARSET_NAME.UTF_8
+      m_eillumination_mode = SC_E_ILLUMINATION_MODE._ON
+      m_einverse_1d_mode = SC_E_INVERSE1DMODE_MODE.DISABLE
+      m_elcd_mode = SC_E_LCD_MODE.DISABLED
+      m_elinear_security_level = SC_E_LINEAR_SECURITY_LEVEL.SECURITY_SHORT_OR_CODABAR
+      m_epicklist = SC_E_PICKLIST_MODE.DISABLED
+      m_epoor_quality_bcdecode_effort_level = SC_E_POOR_QUALITY_DECODE_LEVEL.SECURITY_LEVEL_0
+      m_eaim_type = SC_E_AIM_TYPE.TRIGGER
+      m_escanning_mode = SC_E_SCANNINGMODE.SINGLE
+      
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 1996051682504811032
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructeur()
+      
+     type : 655360
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x1fc7bfb50426cc3d
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

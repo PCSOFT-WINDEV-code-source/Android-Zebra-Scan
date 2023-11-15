@@ -1,0 +1,1175 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_DataWedge
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x1b18400b000965fc
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACxqlhgdVzPeEwYHVn1bcAjE358ETdGXRTSvzDyNFgRX975j5tYquBDTuel8gPgu+cfRJEzsgrEAFDaL0HbqfBBdnJmwXjlfozYsakNqcQ5Wkmf8dKKxhZBBKchio2p2dKjHYnKA+/H9850/mu+d90NYgUy1glZe3nOc6FV8eYdowB2H8w+VieQt6yYgsJkdJk71BFADhCz/A/BvCBTSDeyU5VhDsKJ8ICDFmEJXOrEUgaPfZN09aEXGkZcTIBh7cMiUJ6v/hVB8al/OhMkYS4WA2hnNml+SJ/c0A6JjlmlRGBlZG2QM+X7z50CKv4ISq7pfU5GI3FORkLW9HJx/JjfgDKSXyTGXm/wpfpo0JiENfloc8A1jYYJLpRFG5UD4QlzJ0cjjI8jqzr9mmFZhWzLVcOErp1Yu/QjKiidsY5WQhZ7Z1e0zLN3/ZiGnIj4n1FSlJhhpuUMh68hqQYCjfedqIl25uamFdYDWJA=
+     code : |1+
+      /////////////////////////////////////////////////////////////////////////////////////
+      //	Composant DataWedge version 6.7
+      ////////////////////////////////////////////////////////////////////////////////////
+      //
+      // Ce composant a pour but de simplifier l'utilisation de DataWedge depuis WINDEV Mobile.
+      // Il est compatible avec les APIs de DataWedge supérieures ou égales à la version 6.7.
+      //
+      // La documentation de DataWedge ainsi que des tutoriels, guides et exemples sont disponibles à l'adresse suivante:
+      // http://techdocs.zebra.com/datawedge/6-7/guide/about/
+      //
+      // Ce composant utilise 2 librairies java:
+      //
+      // - DataWedgeProfileIntentsWrapper : 
+      // 		Un ensemble de classes simplifiant le développement des APIs Datawedge
+      // 		https://github.com/ltrudu/DataCaptureReceiver
+      //
+      // - WindevMobileDataWedgeWrapper : 
+      // 		Une façade vers des méthodes java implémentant les classes de la librairie DataCaptureReceiver
+      // 		https://github.com/ltrudu/WindevMobileDataWedgeWrapper
+      //
+      //	Afin de compiler le projet, ces 2 librairies doivent être ajoutées à la génération de l'application Android.
+      //	Il faut pour cela ouvrir la fenêtre de génération de l'application: cliquer sur le bouton "Générer l'application Android"
+      //	Rajouter les artifacts dans l'étape: Intégration de dépendances distantes
+      //	Utiliser les informations suivantes pour décrire les artifacts à intégrer:
+      //	- DataWedgeProfileIntentsWrapper
+      //		Groupe: com.zebra.datawedgeprofileintentswrapper
+      //		Nom: datawedgeprofileintentswrapper
+      //		Version: 6.7
+      //
+      //	- WindevMobileDataWedgeWrapper
+      //		Groupe: com.zebra.windevmobiledatawedgewrapper
+      //		Nom: windevmobiledatawedgewrapper
+      //		Version: 6.7
+      //
+      //	Les deux artifacts sont disponibles sur le repository JCenter.
+      //
+      //	Le composant propose 2 set de procédures:
+      //	- 	Les procédures dont le nom commence par ZebraDWFacile : destinées à simplifier au maximum l'implémentation
+      //		du scanner. La fenêtre FEN_Scan_Simple est un exemple simple de mise en place rapide du scanner à l'aide
+      //		des APIs DataWedge
+      //  
+      // 	-	Les procédures dont le nom ne comporte pas le terme "facile" : destinées à donner accès aux fonctionnalités avancées
+      //		de DataWedge comme la création de profil, l'initialisation de ses paramètres, le contrôle du scanner, etc..
+      //		La fenêtre FEN_Scan_Avancé est un exemple d'utilisation des fonctionnalités avancées 	
+      //
+      //	Les classes de paramètres contenues dans la collection servent à configurer le profil, et à modifier les attributs
+      //	du scanner dynamiquement.
+      //
+      //	CZebraDWConfigurationDuProfil : 
+      // 			Classe contenant tous les paramètres de profil tels qu'ils sont décris dans la documentation de l'API DataWedge:
+      //			http://techdocs.zebra.com/datawedge/6-7/guide/api/setconfig/
+      // 			L'arborescence de ses membres reflète l'arborescence du Bundle qui doit être passé à l'intent décrit dans la
+      // 			documentation.						
+      //
+      //	CZebraDWModificationDesParametresDuScanner :
+      //			Classe contenant tous les paramètres permettant de modifier les attributs du scanner dynamiquement.
+      //			Les paramètres accessibles sont décris dans la documentation de l'API DataWedge:
+      //			http://techdocs.zebra.com/datawedge/6-7/guide/api/switchscannerparams/
+      //
+      //	
+      //	Les procédures DWFacile sont les suivantes:
+      // - ZebraDWFacileInitialiser : Initialise le composant (à placer dans la procédure de fin d'initialisation de la fenêtre)
+      // - ZebraDWFacileDemarrer: Démarre le composant en lui donnant le nom de la procédure qui sera appelée pour traiter les scans reçus (à placer dans la procédure de prise de focus de la fenêtre)
+      // - ZebraDWFacileStopper: Stoppe le composant (la procédure de scan n'est plus appelée, à placer dans la procédure appelée lorsque la fenêtre passe en arrière plan).
+      // - ZebraDWFacileNettoyer: Nettoie les objets système Android associés à la fenêtre courante (à placer dans la procédure appelée lors de la fermeture d'une fenêtre fille nécessitant la fonctionnalité de scan)
+      // - ZebraDWFacileNettoyerEtStopper: Stoppe le composant et nettoie les objets systèmes associés à la fenêtre (A placer dans la procédure appelée lors de la fermeture de la fenêtre mère).
+      //
+      // Les procédures avancées sont les suivantes:
+      // + Contrôle du service DataWedge:
+      // 		- ZebraDWActiverDataWedge: 
+      // 			Active le service DataWedge. 
+      // 			Une fois activé, les scans seront remontés à l'application si une callback de scan a été définie 
+      // 			à l'aide de la méthode ZebraDWEnregisterCallbackDeScan
+      // 		- ZebraDWDesactiverDatawedge: 
+      // 			Désactive le service DataWedge. 
+      // 			Rend le scanner inactif à toute demande de scan. Une fois désactivé, il ne sera plus possible de scanner 
+      // 			à l'aide du bouton matériel ou de la méthode ZebraDWDemarrerUnScan.
+      // + Configuration de la réception des données scannées
+      // 		- ZebraDWEnregistrerCallbackDeScan: 
+      // 			Enregistre une procédure WL pour recevoir les résultats des scans.
+      //			Le prototype de la procédure est le suivant: CB_TraiteScan(sData est une chaine, sSymbology est une chaine)
+      // 		- ZebraDWEffacerCallbackDeScan:
+      //			Supprime l'enregistrement de la callback de scan définie au moyen de la procédure ZebraDWEnregistrerCallbackDeScan
+      // 			Le scanner fonctionnera toujours, mais l'application ne traitera plus les données scannées car elle ne recevra plus les résultats de scans.
+      // 		- ZebraDWNettoyerBroadcastReceiver:
+      //			Supprime le broadcast receiver associé à la fenêtre.
+      // 			Le broadcast receiver est un objet Android permettant la réception des résultats de scan.
+      // 			Il est utilisé dans les librairies sous-jacentes. 
+      // 			Il est nécessaire d'appeler cette méthode lorsque l'on est dans le traitement de fermeture d'une fenêtre afin d'éviter les fuites mémoire.
+      // + Gestion des Profils
+      // 		- ZebraDWVerifierSiLeProfilExiste: 
+      // 			Vérifie si un profil existe déjà.
+      // 		- ZebraDWCreerUnProfil: 
+      // 			Créé un profil DataWedge initialisé avec les valeurs par défaut.
+      // 		- ZebraDWEffacerUnProfil: 
+      // 			Efface le profil indiqué.
+      // 		- ZebraDWInitialiserUnProfil: 
+      // 			Initialise un profil DataWedge (i.e. configure les paramètres du profil)
+      //			Par defaut, le profil sera initialisé en mode CREATE_IF_NOT_EXIST : un nouveau profil sera créé si ce dernier n'existe pas.
+      //			Dans ce mode, si le profil existe, un erreur PROFILE_ALREADY_EXISTS sera remontée.
+      //			Il est possible de changer ce comportement en modifiant la valeur du membre: clSettings.m_clMainBundle.m_eCONFIG_MODE
+      //			Les valeurs possibles sont : 
+      //					- CREATE_IF_NOT_EXIST : crée le profil si ce dernier n'existe pas. Permet de ne pas avoir à créer le profil au préalable. Remonte une erreur si le profil existe déjà.
+      //					- OVERWRITE: écrase le profil si ce dernier existe déjà avec des nouvelles valeurs. Remonte une erreur si le profil n'existe pas.
+      //					- UPDATE: met à jour les paramètres du profil. Attention, remonte une erreur si le profil n'existe pas. 
+      // + Contrôle et gestion du scanner:
+      // 		- ZebraDWDemarrerUnScan: 
+      // 			Démarre le scanner de façon logicielle. Le scanner passe en attente de scan. 
+      // 			Si la mire n'a pas été désactivée, cette dernière s'illuminera automatiquement.
+      //		- ZebraDWStopperUnScan: 
+      // 			Stoppe le scanner si ce dernier est en attente de scan (un scan est en cours). 
+      // 			Si la mire était allumée, elle s'éteindra automatiquement.
+      // 		- ZebraDWModifierLesParametresDuScanner:
+      //			Permet de modifier les paramètres du scanner dynamiquement
+      //			Cette méthode est utile si l'on souhaite changer le comportement du scanner de façon contextuelle.
+      //			ex: on peut activer ou désactiver certaines symbologies en fonction du besoin
+      //
+      //
+      //
+      
+      
+      SI EnModeSimulateur() ALORS
+      	FinProgramme("Cet exemple est destiné à être exécuté sur un appareil Android de la marque Zebra. Il ne fonctionne pas en mode simulateur.")
+      FIN
+      
+      /////////////////////////////////////////////////
+      // Initialise DataWedge
+      SI PAS EnModeSimulateur() ALORS
+      	_DataWedgeInitialise()
+      FIN
+      gsDWFacileCallbackDeScan est une chaine 
+      gsDWFacileCallbackSucces est une chaîne
+      gsDWFacileCallbackErreur est une chaîne
+      gnDWFacileTimeOut est un entier = 10000
+      
+     type : 720896
+  procedures :
+   -
+     name : _DataWedgeInitialise
+     procedure_id : 1952385669113020409
+     type_code : 15
+     code : |1+
+      // Imports
+      import com.zebra.datawedgeprofileintents.*;
+      import android.util.Log;
+      import android.text.TextUtils;
+      import android.content.BroadcastReceiver;
+      import android.content.Context;
+      import android.content.Intent;
+      import android.content.IntentFilter;
+      
+      import android.app.Activity;
+      import com.zebra.windevmobiledatawedgewrapper.*;
+      
+      private static void _DataWedgeInitialise(){
+      	mDataWedgeWindevMobileFacade.DataWedgeInitialise();
+      }
+      
+      // Membres
+      private static String TAG = "WMDataWedge";
+      
+      // Nous implémentons ici une interfaces permettant à la librairie java d'exécuter des procédures WL
+      // en utilisant l'inversion de contrôle
+      private static DataWedgeWindevMobileFacade.IAppelProcedureWL mAppelProcedureWL = new DataWedgeWindevMobileFacade.IAppelProcedureWL() {			
+      	@Override
+      	public void appelProcedureWLSS(String param1, String param2) {
+      		appelProcedureWL(param1, param2);	
+      	}
+      	
+      	@Override
+      	public void appelProcedureWLSSB(String param1, String param2, boolean param3) {
+      		appelProcedureWL(param1, param2, param3);	
+      	}
+      
+      	@Override
+      	public void appelProcedureWLSSS(String param1, String param2, String param3) {
+      		appelProcedureWL(param1, param2, param3);
+      	}	
+      	
+      	@Override
+      	public void appelProcedureWLSSSS(String param1, String param2, String param3, String param4) {
+      		appelProcedureWL(param1, param2, param3, param4);
+      	}
+      };
+      
+      // Nous implémentons ici une interface permettant à la librairie Java de récupérer le contexte de l'application
+      private static DataWedgeWindevMobileFacade.IActivityRetriever mActivityRetriever  = new DataWedgeWindevMobileFacade.IActivityRetriever() {
+      	@Override
+      	public Activity getActivity() {
+      		return getCurrentActivity();
+      	}
+      };
+      
+      // Classe facade pour l'intégration de DataWedge dans Windev Mobile
+      private static DataWedgeWindevMobileFacade mDataWedgeWindevMobileFacade = new DataWedgeWindevMobileFacade(mAppelProcedureWL, mActivityRetriever);
+      
+      
+     language : Java
+     type : 458752
+   -
+     name : _DWVerifierSiLeProfilExiste
+     procedure_id : 1952396281977320873
+     type_code : 15
+     code : |1-
+      
+      // Vérifie si un profil existe déjà
+      private static void _DWVerifierSiLeProfilExiste(final String fsNomDuProfil, final long flTimeoutMs, final String fsCallbackSucces, final String fsCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWVerifierSiLeProfilExiste(fsNomDuProfil, flTimeoutMs, fsCallbackSucces, fsCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWLogMessage
+     procedure_id : 1952634502340446501
+     type_code : 15
+     code : |1-
+      
+      // Log JAVA
+      private static void _DWLogMessage(String message)
+      {
+      	Log.d(TAG, message);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWCreerUnProfil
+     procedure_id : 1952648010011150135
+     type_code : 15
+     code : |1+
+      
+      // Créé un profil DataWedge initialisé avec les valeurs par défaut
+      private static void _DWCreerUnProfil(final String fsNomDuProfil, final long flTimeoutMs, final String fsCallbackSucces, final String fsCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWCreerUnProfil(fsNomDuProfil, flTimeoutMs, fsCallbackSucces, fsCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWEffacerUnProfil
+     procedure_id : 1952648624191550584
+     type_code : 15
+     code : |1+
+      
+      // Efface le profil indiqué
+      private static void _DWEffacerUnProfil(final String fsNomDuProfil, final long flTimeoutMs, final String fsCallbackSucces, final String fsCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWEffacerUnProfil(fsNomDuProfil, flTimeoutMs, fsCallbackSucces, fsCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : ZebraDWInitialiserUnProfil
+     internal_properties : CAAAAAgAAAC2AfJEPkrsGbT0Czlm6MPqZZJeQqZFsZY+sGDJOZ7i9wCdK0rp+MT5/rZSTY5GlZ5c7Ix15v4Vc/gkzV60pDz9V+iakgxKv1q23hrwMsPsn9zBLydjBMnWos/KRPn6BGkJ2P91yt/LdKYxv/CxSUStInB2c52GQdaJNlXBhr5O/9sl3R9sD37rge6weN25DK5cABvSTUY=
+     procedure_id : 1952654787470596107
+     type_code : 15
+     code : |1+
+      // Résumé : Initialise un profil DataWedge (i.e. configure les paramètres du profil)
+      // Par defaut, le profil sera initialisé en mode CREATE_IF_NOT_EXIST : un nouveau profil sera créé si ce dernier n'existe pas.
+      // Dans ce mode, si le profil existe, un erreur PROFILE_ALREADY_EXISTS sera remontée.
+      // Il est possible de changer ce comportement en modifiant la valeur du membre: clSettings.m_clMainBundle.m_eCONFIG_MODE
+      // Les valeurs possibles sont : 
+      // 		- CREATE_IF_NOT_EXIST : crée le profil si ce dernier n'existe pas. Permet de ne pas avoir à créer le profil au préalable. Remonte une erreur si le profil existe déjà.
+      //		- OVERWRITE: écrase le profil si ce dernier existe déjà avec des nouvelles valeurs. Remonte une erreur si le profil n'existe pas.
+      //		- UPDATE: met à jour les paramètres du profil. Attention, remonte une erreur si le profil n'existe pas. 
+      // Syntaxe :
+      //ZebraDWInitialiserUnProfil (<clSettings> est CZebraDWConfigurationDuProfil, <sCallback> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	clSettings (CZebraDWConfigurationDuProfil) : Classe contenant les paramètres de configuration du profil. Pour plus d'informations sur les membres, se référer à la documentation DataWedge: http://techdocs.zebra.com/datawedge/6-7/guide/api/setconfig/
+      //	sCallback (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // // Création de la classe contenant les paramètres de profil
+      // clSettings est un CZebraDWConfigurationDuProfil
+      // 
+      // // On indique un nom de profil, ainsi qu'une durée maximale avant de considérer qu'on a un timeout
+      // clSettings.m_sProfileName = gsNomDuProfil
+      // clSettings.m_nTimeOutMS = gnTimeOut
+      // 
+      // // Configuration de certains paramètres.
+      // // Pour plus d'information, voir: http://techdocs.zebra.com/datawedge/6-7/guide/api/setconfig/
+      // clSettings.m_clScannerPlugin.m_clDecoders.m_bdecoder_korean_3of5 = Vrai
+      // clSettings.m_clScannerPlugin.m_clDecodersParams.m_edecoder_gs1_lim_security_level = CZebraDWProfilePluginScannerDecodersParams.SECURITY_LEVEL_1
+      // 
+      // // Initialiser la configuration
+      // ZebraDWInitialiserUnProfil(clSettings,"FEN_Scan.CB_ProfilInitialisé","FEN_Scan.CB_Erreur")
+      //
+      PROCEDURE ZebraDWInitialiserUnProfil(clSettings est un CZebraDWConfigurationDuProfil, sCallback est une chaîne, sCallbackError est une chaine)
+      // Remplir la structure de configuration du module d'initialisation du profil
+      _DWCreerConfigurationInitialiserProfil(clSettings)
+      // Exécuter l'initialisation du profil
+      _DWInitialiserUnProfil(sCallback,sCallbackError)
+      
+     type : 458752
+   -
+     name : _DWCreerConfigurationInitialiserProfil_Java
+     procedure_id : 1952658944999055245
+     type_code : 15
+     code : |1-
+      
+      // Initialiser la structure de configuration du module d'initialisation du profil
+      private static void _DWCreerConfigurationInitialiserProfil_Java(String profilAsJsonString)
+      {
+      	mDataWedgeWindevMobileFacade.DWCreerConfigurationInitialiserProfil_Java(profilAsJsonString);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWInitialiserUnProfil
+     procedure_id : 1952659078143137270
+     type_code : 15
+     code : |1+
+      private static void _DWInitialiserUnProfil(final String fsCallback, final String fsCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWInitialiserUnProfil(fsCallback, fsCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWEffacerCallbackDeScan
+     procedure_id : 1952703118738280106
+     type_code : 15
+     code : |1+
+      private static void _DWEffacerCallbackDeScan(boolean effacerLeReceiver, final String sCallbackSucces, final String sCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWEffacerCallbackDeScan(effacerLeReceiver, sCallbackSucces, sCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWEnregistrerCallbackDeScan
+     procedure_id : 1952704729351063394
+     type_code : 15
+     code : |1+
+      private static void _DWEnregistrerCallbackDeScan(final String sCallbackHandleScan , final String sCallbackSucces, final String sCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWEnregistrerCallbackDeScan(sCallbackHandleScan, sCallbackSucces, sCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWDemarrerUnScan
+     procedure_id : 1952765649167808313
+     type_code : 15
+     code : |1+
+      private static void _DWDemarrerUnScan(final String fsNomDuProfil, final long flTimeoutMs, final String fsCallbackSucces, final String fsCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWDemarrerUnScan(fsNomDuProfil, flTimeoutMs, fsCallbackSucces, fsCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWStopperUnScan
+     procedure_id : 1952768488141327509
+     type_code : 15
+     code : |1+
+      private static void _DWStopperUnScan(final String fsNomDuProfil, final long flTimeoutMs, final String fsCallbackSucces, final String fsCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWStopperUnScan(fsNomDuProfil, flTimeoutMs, fsCallbackSucces, fsCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWModifierLesParametresDuScanner_Java
+     procedure_id : 1952768934817964710
+     type_code : 15
+     code : |1+
+      private static void _DWModifierLesParametresDuScanner_Java(final String fsCallback, final String fsCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWModifierLesParametresDuScanner_Java(fsCallback, fsCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWCreerConfigurationModifierLesParametresDuScanner_Java
+     procedure_id : 1952769304185238041
+     type_code : 15
+     code : |1+
+      private static void _DWCreerConfigurationModifierLesParametresDuScanner_Java(String settingsAsJSONString)
+      {
+      	mDataWedgeWindevMobileFacade.DWCreerConfigurationModifierLesParametresDuScanner_Java(settingsAsJSONString);
+      }
+     language : Java
+     type : 458752
+   -
+     name : ZebraDWModifierLesParametresDuScanner
+     procedure_id : 1952769995675134150
+     type_code : 15
+     code : |1+
+      // Résumé : Permet de modifier les paramètres du scanner dynamiquement
+      // Cette méthode est utile si l'on souhaite changer le comportement du scanner de façon contextuelle.
+      // ex: on peut activer ou désactiver certaines symbologies en fonction du besoin
+      // Syntaxe :
+      //ZebraDWModifierLesParametresDuScanner (<clConfiguration> est CZebraDWModificationDesParametresDuScanner, <sCallback> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	clConfiguration (CZebraDWModificationDesParametresDuScanner) : Classe contenant les paramètres que l'on souhaite modifier. Pour plus d'informations se référer à la documentation DataWedge: http://techdocs.zebra.com/datawedge/6-7/guide/api/switchscannerparams/
+      //	sCallback (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation
+      // // Création de la classe qui contiendra les paramètres de modification du scanner
+      // // On commence par créer une classe qui contient les paramètres par défaut
+      // clParamètres est un CZebraDWModificationDesParametresDuScanner
+      // clParamètres.m_sProfileName = gsNomDuProfil
+      // clParamètres.m_nTimeOutMS = gnTimeOut
+      // // On change les paramètres pour passer en mode agressif// clParamètres.m_clScannerPlugin.m_clReaderParams.m_eaim_type = CZebraDWProfilePluginScannerReaderParams.PRESS_AND_SUSTAIN
+      // clParamètres.m_clScannerPlugin.m_clReaderParams.m_nbeam_timer = 0
+      // clParamètres.m_clScannerPlugin.m_clReaderParams.m_nsame_barcode_timeout = 0
+      // clParamètres.m_clScannerPlugin.m_clReaderParams.m_ndifferent_barcode_timeout = 0
+      // 
+      // // Modification des paramètres
+      // ZebraDWModifierLesParametresDuScanner(clParamètres,"FEN_Scan_Avancé.CB_ProfilAggressif","FEN_Scan_Avancé.CB_Erreur")
+      
+      
+      PROCEDURE ZebraDWModifierLesParametresDuScanner(clConfiguration est un CZebraDWModificationDesParametresDuScanner, sCallback est une chaîne, sCallbackError est une chaine)
+      // Remplir la structure de configuration du module d'initialisation du profil
+      _DWCreerConfigurationModifierLesParametresDuScanner(clConfiguration)
+      // Exécuter l'initialisation du profil
+      _DWmodifierLesParametresDuScanner_Java(sCallback,sCallbackError)
+     type : 458752
+   -
+     name : _DWActiverDataWedge
+     procedure_id : 1952775342909614031
+     type_code : 15
+     code : |1+
+      private static void _DWActiverDataWedge(final String fsNomDuProfil, final long flTimeoutMs, final String fsCallbackSucces, final String fsCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWActiverDataWedge(fsNomDuProfil, flTimeoutMs, fsCallbackSucces, fsCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWDesactiverDataWedge
+     procedure_id : 1952775403039169597
+     type_code : 15
+     code : |1+
+      private static void _DWDesactiverDataWedge(final String fsNomDuProfil, final long flTimeoutMs, final String fsCallbackSucces, final String fsCallbackError)
+      {
+      	mDataWedgeWindevMobileFacade.DWDesactiverDataWedge(fsNomDuProfil, flTimeoutMs, fsCallbackSucces, fsCallbackError);
+      }
+     language : Java
+     type : 458752
+   -
+     name : _DWCreerConfigurationInitialiserProfil
+     procedure_id : 1996072152320366979
+     type_code : 15
+     code : |1+
+      // Résumé : Initialiser la structure de configuration du module d'initialisation du profil
+      // Syntaxe :
+      //_DWCreerConfigurationInitialiserProfil (<clSettings>)
+      //
+      // Paramètres :
+      //	clSettings : Paramètres
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVEE _DWCreerConfigurationInitialiserProfil(clSettings est un CZebraDWConfigurationDuProfil)
+      profilAsJSONString est une chaine = _DWSerialiseCZebraDWProfileSetConfigSettings(clSettings)
+      _DWCreerConfigurationInitialiserProfil_Java(profilAsJSONString)
+     type : 458752
+   -
+     name : _DWSerialiseCZebraDWProfileSetConfigSettings
+     procedure_id : 1996091140370813074
+     type_code : 15
+     code : |1+
+      // Résumé : Remplir la structure de configuration du module d'initialisation du profil
+      // Syntaxe :
+      //[ <Résultat> = ] _DWSerialiseCZebraDWProfileSetConfigSettings (<clSettings>)
+      //
+      // Paramètres :
+      //	clSettings : Paramètres
+      // Valeur de retour :
+      // 	chaîne ANSI : // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVEE _DWSerialiseCZebraDWProfileSetConfigSettings(clSettings est un CZebraDWConfigurationDuProfil)
+      bufRésultat est un Buffer
+      Sérialise(clSettings, bufRésultat, psdJSON)
+      profilAsJSONString est une chaine ANSI = bufRésultat
+      profilAsJSONString = remplace(profilAsJSONString,"_ON","ON",MotComplet+SansCasse)
+      renvoyer profilAsJSONString
+      
+     type : 458752
+   -
+     name : _DWSerialiseCZebraDWProfileSwitchScannerParams
+     procedure_id : 1996109419742642281
+     type_code : 15
+     code : |1+
+      // Résumé : Remplir la structure de configuration du module d'initialisation du profil
+      // Syntaxe :
+      //[ <Résultat> = ] _DWSerialiseCZebraDWProfileSwitchScannerParams (<clSwitchParams> est CZebraDWModificationDesParametresDuScanner)
+      //
+      // Paramètres :
+      //	clSwitchParams (CZebraDWModificationDesParametresDuScanner) : Paramètres
+      // Valeur de retour :
+      // 	chaîne ANSI : Profil
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVEE _DWSerialiseCZebraDWProfileSwitchScannerParams(clSwitchParams est un CZebraDWModificationDesParametresDuScanner)
+      bufRésultat est un Buffer
+      Sérialise(clSwitchParams, bufRésultat, psdJSON)
+      profilAsJSONString est une chaine ANSI = bufRésultat
+      profilAsJSONString = Remplace(profilAsJSONString,"_ON","ON",MotComplet+SansCasse)
+      RENVOYER profilAsJSONString
+     type : 458752
+   -
+     name : _DWCreerConfigurationModifierLesParametresDuScanner
+     procedure_id : 1996418189236929661
+     type_code : 15
+     code : |1+
+      // Résumé : Remplir la structure de configuration du module d'initialisation du profil
+      // Syntaxe :
+      //_DWCreerConfigurationModifierLesParametresDuScanner (<clSettings> est CZebraDWModificationDesParametresDuScanner)
+      //
+      // Paramètres :
+      //	clSettings (CZebraDWModificationDesParametresDuScanner) : Paramètres
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVEE _DWCreerConfigurationModifierLesParametresDuScanner(clSettings est un CZebraDWModificationDesParametresDuScanner)
+      profilAsJSONString est une chaine = _DWSerialiseCZebraDWProfileSwitchScannerParams(clSettings)
+      _DWCreerConfigurationModifierLesParametresDuScanner_Java(profilAsJSONString)
+     type : 458752
+   -
+     name : ZebraDWFacileInitialiser
+     internal_properties : CAAAAAgAAACCLe5IHyYDcYQ0C8EW6MPqrZJGkg5lWcbWKNhJIWb6b4DFaxI5cDQxfgZi9V6W1a7k3NTlzt6NQxDcBZ7MHAQlxzCKOjyyzzKm3vqcbo/wmyilA4v3uGXyjuNOwMUWiCVFnKN5zgPXkJLlExxNpZg5PjS6t0H6nTLV2rmN4irya0eJsTNwY2pXDWI09Cl1ALn7/B/eMVo=
+     procedure_id : 1996433792874181855
+     type_code : 15
+     code : |1+
+      // Résumé : Initialise DataWedge pour la fenêtre courante
+      // Cette méthode est à placer dans l'évènement Fin d'initialisation de la fenêtre
+      // Syntaxe :
+      //ZebraDWFacileInitialiser (<sCallbackSucces> est chaîne, <sCallbackErreur> est chaîne)
+      //
+      // Paramètres :
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackErreur (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWFacileInitialiserEtDemarrer("FEN_Scan.CB_Succes","FEN_Scan.CB_Erreur")
+      //
+      //	sCallbackDeScan (chaîne UNICODE) : Indique le nom de la procédure à exécuter lorsque l'on reçoit un résultat de scan depuis DataWedge. Prototype de la procédure: CB_TraiteScan(sData est une chaine, sSymbology est une chaine)
+      PROCEDURE ZebraDWFacileInitialiser(sCallbackSucces est une chaine, sCallbackErreur est une chaine)
+      gsDWFacileCallbackSucces = sCallbackSucces
+      gsDWFacileCallbackErreur = sCallbackErreur
+      _DWLogMessage("ZebraDWFacileInitialiser")
+      // On vérifie si le profil existe
+      ZebraDWVerifierSiLeProfilExiste(AndroidObtenirLeNomDuPackageDeLApplication(), gnDWFacileTimeOut, "_DWFacileCBProfilExiste", sCallbackErreur)
+     type : 458752
+   -
+     name : _DWFacileSuccesCreeProfil
+     procedure_id : 1996447588313134977
+     type_code : 15
+     code : |1+
+      // Résumé : En cas de succès, cette procédure initialise le profil avec des paramètres par défaut
+      // Syntaxe :
+      //_DWFacileSuccesCreeProfil (<sNomDuProfil> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Nom du profil (visible dans l'interface graphique DataWedge)
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVEE _DWFacileSuccesCreeProfil(sNomDuProfil est une chaine)
+      _DWLogMessage("_DWFacileSuccesCreeProfil:" + sNomDuProfil)
+      _DWFacileInitialiserLeProfil()
+     type : 458752
+   -
+     name : mDataWedgeWindevMobileFacade.DWObenirLeNomDuPackage
+     procedure_id : 1996448945522854322
+     type_code : 15
+     code : |1-
+      // Résumé : <indiquez ici ce que fait la procédure>
+      // Syntaxe :
+      // [ <Résultat> = ] mDataWedgeWindevMobileFacade.DWObenirLeNomDuPackage ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	chaîne UNICODE : <indiquez ici les valeurs possibles ainsi que leur interprétation>
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE mDataWedgeWindevMobileFacade.DWObenirLeNomDuPackage()
+      private static String mDataWedgeWindevMobileFacade.DWObenirLeNomDuPackage()
+      {
+      	Context context = getApplicationContext();
+      	String sPackageName = context.getPackageName();
+      	return sPackageName;
+      }
+      // Résumé : <indiquez ici ce que fait la procédure>
+      // Syntaxe :
+      // _DWObenirLeNomDuPackage ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      //PROCEDURE mDataWedgeWindevMobileFacade.DWObenirLeNomDuPackage()
+      //
+      //
+     language : Java
+     type : 458752
+   -
+     name : ZebraDWFacileNettoyerEtStopper
+     internal_properties : CAAAAAgAAAAB40MavYW0CDlDeb6L57m1XDlExLcivPkyzuLHdZLO6HK/glIjwjFOCXkihOAk7cBkaABwAzkfM1gIBXmFW5meEfAa7EIESRA/9bAOx9htA5vYMVLMMZkhbHujXCgfwMS3mOVkZ1S17gXPRHAgsFQcaKyWOGDXA1jQNAIHld/EkK6vBaOeKM1lHjXL/O/XgpIEgKw0SboFnRPj9pPt7IW+TR7nLwBRuc2l8D5paPLqO4le8g==
+     procedure_id : 1996452308482440157
+     type_code : 15
+     code : |1+
+      // Résumé : Termine proprement l'utilisation de DataWedge en arrêtant l'écoute des scans
+      // et en supprimant le profil créé par la méthode ZebraDWFacileInitialiserEtDemarrer
+      // Syntaxe :
+      //ZebraDWFacileNettoyerEtStopper (<sCallbackSucces> est chaîne, <sCallbackErreur> est chaîne)
+      //
+      // Paramètres :
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackErreur (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWFacileNettoyerEtStopper("FEN_Scan.CB_Succes","FEN_Scan.CB_Erreur")
+      //
+      PROCEDURE ZebraDWFacileNettoyerEtStopper(sCallbackSucces est une chaine, sCallbackErreur est une chaine)
+      // Sauvegarde des noms de procédures pour réutilisation dans la callbacks _DWFacileNettoyerBroadcastReceiverSuccess
+      gsDWFacileCallbackErreur = sCallbackErreur
+      gsDWFacileCallbackSucces = sCallbackSucces
+      // Suppression du callback de Scan et du broadcast receiver associé à la fenêtre
+      ZebraDWNettoyerBroadcastReceiver("_DWFacileNettoyerBroadcastReceiverSuccess", sCallbackErreur)
+     type : 458752
+   -
+     name : _DWFacileCBProfilExiste
+     internal_properties : CAAAAAgAAABKXJr3lgFN6X++thTbIlm9ODbHVEqlke21+pBjA8PSjgQnmUiCKbmDW1eM6AWqKLJZxNQ9GzD1swb8bzpNIIi652nFwVQBCM3pAioioF/T6StdVMR3Nr4OfU63AHtCawHe4KgO3v923neupqKnWdmVfxgVrh0aJHrcRXqvkEZzM15d5giiNaPN2AmpME3T+n1q0wLbaw==
+     procedure_id : 1996463260657362500
+     type_code : 15
+     code : |1-
+      // Résumé : Callback
+      // Syntaxe :
+      //_DWFacileCBProfilExiste (<sNomDuProfil> est chaîne, <bProfilExiste> est booléen)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Nom du profil (visible dans l'interface graphique DataWedge)
+      //	bProfilExiste (booléen) : <indiquez ici le rôle de bProfilExiste>
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVEE _DWFacileCBProfilExiste(sNomDuProfil est une chaine, bProfilExiste est un booléen)
+      
+      SI bProfilExiste = Vrai ALORS
+      	_DWLogMessage("_DWFacileProfilExiste: Le profil" + sNomDuProfil + " existe")
+      	_DWFacileEffacerLeProfilExistant()
+      SINON
+      	_DWLogMessage("_DWFacileProfilExiste: Profil" + sNomDuProfil + " non trouvé")
+      	ZebraDWCreerUnProfil(AndroidObtenirLeNomDuPackageDeLApplication(),gnDWFacileTimeOut,"_DWFacileSuccesCreeProfil", gsDWFacileCallbackErreur)
+      FIN
+     type : 458752
+   -
+     name : _DWFacileInitialiserLeProfil
+     procedure_id : 1996463793233365589
+     type_code : 15
+     code : |1+
+      // Résumé : Initialise le profil
+      // Syntaxe :
+      // _DWFacileInitialiserLeProfil ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVEE _DWFacileInitialiserLeProfil()
+      _DWLogMessage("_DWFacileInitialiserLeProfil")
+      clSettings est un CZebraDWConfigurationDuProfil
+      clSettings.m_sProfileName = AndroidObtenirLeNomDuPackageDeLApplication()
+      clSettings.m_nTimeOutMS = gnDWFacileTimeOut
+      ZebraDWInitialiserUnProfil(clSettings, gsDWFacileCallbackSucces, gsDWFacileCallbackErreur)
+     type : 458752
+   -
+     name : _DWFacileEffacerLeProfilExistant
+     procedure_id : 1996465884890527371
+     type_code : 15
+     code : |1+
+      // Résumé : Efface le profil existant
+      // Syntaxe :
+      // _DWFacileEffacerLeProfilExistant ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVEE _DWFacileEffacerLeProfilExistant()
+      _DWLogMessage("_DWFacileEffacerLeProfilExistant")
+      ZebraDWEffacerUnProfil(AndroidObtenirLeNomDuPackageDeLApplication(),gnDWFacileTimeOut,"_DWFacileCBProfilEffaceAvecSucces", gsDWFacileCallbackErreur)
+     type : 458752
+   -
+     name : _DWFacileCBProfilEffaceAvecSucces
+     internal_properties : CAAAAAgAAABKXJr3lgFN6X++thTbIlm9ODbHVEqlke21+pBjA8PSjgQnmUiCKbmDW1eM6AWqKLJZxNQ9GzD1swb8bzpNIIi652nFwVQBCM3pAioioF/T6StdVMR3Nr4OfU63AHtCawHe4KgO3v923neupqKnWdmVfxgVrh0aJHrcRXqvkEZzM15d5giiNaPN2AmpME3T+n1q0wLbaw==
+     procedure_id : 1996466464711116821
+     type_code : 15
+     code : |1+
+      // Résumé : Callback
+      // Syntaxe :
+      //_DWFacileCBProfilEffaceAvecSucces (<sNomDuProfil> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Nom du profil (visible dans l'interface graphique DataWedge)
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVEE _DWFacileCBProfilEffaceAvecSucces(sNomDuProfil est une chaine)
+      _DWLogMessage("_DWFacileProfilEffaceAvecSucces: " + sNomDuProfil)
+      _DWCreerUnProfil(AndroidObtenirLeNomDuPackageDeLApplication(),gnDWFacileTimeOut,"_DWFacileSuccesCreeProfil", gsDWFacileCallbackErreur)
+     type : 458752
+   -
+     name : ZebraDWActiverDataWedge
+     internal_properties : CAAAAAgAAAC/2YQV/mM8TYXaBc+Ywd93hJbZKM+bZ2+paz3ws/22MBzaKXTU8bQ6PaJsAfaVytACwrPPoswOIoBpSnqS7nYvgjJrOmvpJz/eOHCucYgTmnMPS+eCUFRlzXGrJeyc9hduAGUr/w1YOQ0T3vs4e9wFVaCYvTyMou8+5vSEw+B2T5E80CBk5NTzJROkJrOolI9zSOPkwvO44+f2VshjA0WmSo4=
+     procedure_id : 1998707080387799079
+     type_code : 15
+     code : |1+
+      // Résumé : Active DataWedge si ce dernier a été désactivé préalablement à l'aide de la procédure ZebraDWDesactiverDataWedge
+      // Une fois activé, les scans seront remontés à l'application si une callback de scan a été définie au préalable 
+      // à l'aide de la méthode ZebraDWEnregisterCallbackDeScan
+      // Syntaxe :
+      //ZebraDWActiverDataWedge (<sNomDuProfil> est chaîne, <nTimeoutMs> est entier, <sCallbackSucces> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Indique le nom du profil pour lequel on souhaite activer le scanner
+      //	nTimeoutMs (entier) : Indique un timeout en milisecondes au cas où l'intent ne renverrait pas de réponse
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Exemple :
+      // ZebraDWActiverDataWedge("monProfilDataWedge", 5000,   "FEN_Scan.CB_ActiverDataWedgeSucces", "FEN_Scan_Avancé.CB_ActiverDataWedgeErreur")
+      //
+      PROCEDURE ZebraDWActiverDataWedge(sNomDuProfil est une chaine, nTimeoutMs est un entier,sCallbackSucces est une chaine, sCallbackError est une chaine)
+      _DWActiverDataWedge(sNomDuProfil,nTimeoutMs,sCallbackSucces, sCallbackError)
+     type : 458752
+   -
+     name : ZebraDWCreerUnProfil
+     procedure_id : 2001297353694517484
+     type_code : 15
+     code : |1+
+      // Résumé : Créé un profil DataWedge initialisé avec les valeurs par défaut.
+      // Syntaxe :
+      //ZebraDWCreerUnProfil (<sNomDuProfil> est chaîne, <nTimeoutMs> est entier, <sCallbackSucces> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Nom du profil (visible dans l'interface graphique DataWedge)
+      //	nTimeoutMs (entier) : Durée d'attente maximale en ms en cas de non réponse de DataWedge avant TimeOut
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWCreerUnProfil("monProfilDataWedge", 5000,   "FEN_Scan.CB_ProfilCree", "FEN_Scan.CB_Erreur")
+      //
+      PROCEDURE ZebraDWCreerUnProfil(sNomDuProfil est une chaine, nTimeoutMs est un entier, sCallbackSucces est une chaine, sCallbackError est une chaine)
+      _DWCreerUnProfil(sNomDuProfil,nTimeoutMs,sCallbackSucces,sCallbackError)
+     type : 458752
+   -
+     name : ZebraDWDemarrerUnScan
+     internal_properties : CAAAAAgAAABIWoxd/Zdxm/kOPsp9MkWBXgKBBGwTPc8DriBxHZsKRtr789i4Tw3JAZPQxg9GRBYD/PrZVUZB7YzoQ7wTACiaOcmnKX5DoGd/vtMfq54SlHQkUwV29f/P8rNsVZZxeuQzRw+TQVpb03jfY+/6SDDY0GMQ7wwJpYstlsucuyUS3ouIyVEZvDxqvS62BUDa/URQOfjVbQ==
+     procedure_id : 2001297783191346506
+     type_code : 15
+     code : |1+
+      // Résumé : Démarre le scanner de façon logicielle. Le scanner passe en attente de scan. 
+      // Si la mire n'a pas été désactivée, cette dernière s'illuminera automatiquement.
+      // Syntaxe :
+      //ZebraDWDemarrerUnScan (<sNomDuProfil> est chaîne, <nTimeoutMs> est entier, <sCallbackSucces> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Nom du profil (visible dans l'interface graphique DataWedge)
+      //	nTimeoutMs (entier) : Durée d'attente maximale en ms en cas de non réponse de DataWedge avant TimeOut
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWDemarrerUnScan("monProfilDataWedge", 5000,  "FEN_Scan.CB_DemarrerUnScan", "FEN_Scan.CB_Erreur")
+      //
+      PROCEDURE ZebraDWDemarrerUnScan(sNomDuProfil est une chaine, nTimeoutMs est un entier, sCallbackSucces est une chaine, sCallbackError est une chaine)
+      //_DWDemarrerUnScan(sNomDuProfil,nTimeoutMs,sCallbackSucces,sCallbackError)
+      _DWDemarrerUnScan(sNomDuProfil, nTimeoutMs, sCallbackSucces, sCallbackError);
+     type : 458752
+   -
+     name : ZebraDWDesactiverDataWedge
+     internal_properties : CAAAAAgAAAAAIuQORhd5W4mOptplSn2RjkLJVBTrXSerBoApneuK3iIDo8BovyX5YWP4ljdezAbDnAL5HT6BBTRAM0SzEEjSscHH4Q4j2Md/PmcLV6pW2NgIt2nCoRPzbu9wQbIdDph3e/NX7dZf13Srl7vm5FQc5IcU0wgVme8J4k+Yt2GWUn98zVUFiIAueQpKMaxWwYhdIdCNpQ==
+     procedure_id : 2001297942105173739
+     type_code : 15
+     code : |1+
+      // Résumé : Désactive DataWedge. Rend le scanner inactif à toute demande de scan. 
+      // Une fois désactivé, il ne sera plus possible de scanner à l'aide du bouton matériel ou de la méthode ZebraDWDemarrerUnScan.
+      // Syntaxe :
+      //ZebraDWDesactiverDataWedge (<sNomDuProfil> est chaîne, <nTimeoutMs> est entier, <sCallbackSucces> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Nom du profil (visible dans l'interface graphique DataWedge)
+      //	nTimeoutMs (entier) : Durée d'attente maximale en ms en cas de non réponse de DataWedge avant TimeOut
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWDesactiverDataWedge("monProfilDataWedge", 5000,  "FEN_Scan.CB_DésactiveDataWedge", "FEN_Scan.CB_Erreur")
+      //
+      PROCEDURE ZebraDWDesactiverDataWedge(sNomDuProfil est une chaine, nTimeoutMs est un entier, sCallbackSucces est une chaine, sCallbackError est une chaine)
+      _DWDesactiverDataWedge(sNomDuProfil,nTimeoutMs,sCallbackSucces,sCallbackError)
+      
+     type : 458752
+   -
+     name : ZebraDWEffacerUnProfil
+     procedure_id : 2001298066659319563
+     type_code : 15
+     code : |1+
+      // Résumé : Efface le profil indiqué
+      // Syntaxe :
+      //ZebraDWEffacerUnProfil (<sNomDuProfil> est chaîne, <nTimeoutMs> est entier, <sCallbackSucces> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Nom du profil (visible dans l'interface graphique DataWedge)
+      //	nTimeoutMs (entier) : Durée d'attente maximale en ms en cas de non réponse de DataWedge avant TimeOut
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWEffacerUnProfil("monProfilDataWedge", 5000,  "FEN_Scan.CB_ProfilEffacé", "FEN_Scan.CB_Erreur")
+      //
+      PROCEDURE ZebraDWEffacerUnProfil(sNomDuProfil est une chaine, nTimeoutMs est un entier, sCallbackSucces est une chaine, sCallbackError est une chaine)
+      _DWEffacerUnProfil(sNomDuProfil,nTimeoutMs,sCallbackSucces,sCallbackError)
+      
+      
+     type : 458752
+   -
+     name : ZebraDWEnregistrerCallbackDeScan
+     internal_properties : CAAAAAgAAABSdKJYb3GVGf8+LjSD6jHN6Ob/BCL9YZUdkjBbM0Mithw/OVDC+VHjq9fUyJ1SoALJpAwdExgFG24EP4I9UEjSfwGFiRRRsF2JMp7eDBvnfa9hWAhjAnJSSUqbnNc+LyWCFAxC6isaAuNqmt7DZR1Jk6yJYnnGWD6YMV4LLNLnx/Jx6gx+MTdh5MWNDGmPDmGHywrDcw==
+     procedure_id : 2001298242753020167
+     type_code : 15
+     code : |1+
+      // Résumé : Enregistre une procédure WL pour recevoir les résultats des scans
+      // Pour supprimer l'enregistrement, utiliser la procédure: ZebraDWEffacerCallbackDeScan
+      // Syntaxe :
+      //ZebraDWEnregistrerCallbackDeScan (<sCallbackDeScan> est chaîne, <sCallbackSucces> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	sCallbackDeScan (chaîne UNICODE) : Indique le nom de la procédure WL à exécuter lors de la réception de données scannées. Prototype de la procédure: CB_TraiteScan(sData est une chaine, sSymbology est une chaine)
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sCallbackDeScan est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sCallbackDeScan est une chaine, sMessage est une chaine
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWEnregistrerCallbackDeScan("FEN_Scan.TraiteScan", "FEN_Scan.CB_EnregistrerCallbackSuccess", "FEN_SCan.CB_EnregistrerCallbackErreur").
+      //
+      PROCEDURE ZebraDWEnregistrerCallbackDeScan(sCallbackDeScan est une chaîne, sCallbackSucces est une chaine, sCallbackError est une chaine)
+      _DWEnregistrerCallbackDeScan(sCallbackDeScan, sCallbackSucces, sCallbackError)
+      
+     type : 458752
+   -
+     name : ZebraDWStopperUnScan
+     internal_properties : CAAAAAgAAADw0hTegndxu7muHmp98uVh3gIhZGyzPW/DzsCRnduqJlp7k7g4L03pgfNwZo8G5HYD/Nr5laYBDUyI49yTgAg6eQmHyb5jIAf/XkPPOw6ixCRUIzUmZW+/IsNcxSbhylSjt5/DcUpLw2ivk9/KOIBIgJPgnzw51bsdZntMS9XiTnt42UGJbOya7f5mdZCKTfQNUYBd1Q==
+     procedure_id : 2001298461796403263
+     type_code : 15
+     code : |1+
+      // Résumé : Stoppe le scanner si ce dernier est en attente de scan (un scan est en cours). 
+      // Si la mire était allumée, elle s'éteindra automatiquement.
+      // Syntaxe :
+      //ZebraDWStopperUnScan (<sNomDuProfil> est chaîne, <nTimeoutMs> est entier, <sCallbackSucces> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Nom du profil (visible dans l'interface graphique DataWedge)
+      //	nTimeoutMs (entier) : Durée d'attente maximale en ms en cas de non réponse de DataWedge avant TimeOut
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      //  ZebraDWStopperUnScan("monProfilDataWedge", 5000,  "FEN_Scan.CB_StopperUnScan", "FEN_Scan.CB_Erreur")
+      //
+      PROCEDURE ZebraDWStopperUnScan(sNomDuProfil est une chaine, nTimeoutMs est un entier, sCallbackSucces est une chaine, sCallbackError est une chaine)
+      _DWStopperUnScan(sNomDuProfil,nTimeoutMs,sCallbackSucces,sCallbackError)
+      
+     type : 458752
+   -
+     name : ZebraDWEffacerCallbackDeScan
+     internal_properties : CAAAAAgAAAD8IecdFuTDTaF8ViAlWJ2LU//KwmF5FF/Lf2YTAUfV0AekWfPWJVWJcGGm7mii57sZxgllUyw+mzz/JTJ7RI3EUcrqx9JcTqSLUE9H9de1XuFQPCv9RloJlqJOiVVCd/WO7643IpfqpZB8nZMDQ8sVu3Mzh6eM/iXV0fFyAEK7iVU53R5JSCQR2uCbQhaos243nvZiA+HTVY6MGoACtWVW67O/
+     procedure_id : 2001298599235454053
+     type_code : 15
+     code : |1+
+      // Résumé : Supprime l'enregistrement de la callback de scan définie au moyen de la procédure  ZebraDWEnregistrerCallbackDeScan
+      // Le scanner fonctionnera toujours, mais l'application ne traitera plus les données scannées car elle ne recevra plus les résultats de scans.
+      // Syntaxe :
+      //ZebraDWEffacerCallbackDeScan (sCallbackSucces> est une chaîne, sCallbackError est chaîne)
+      //
+      // Paramètres :
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWEffacerCallbackDeScan("FEN_Scan.CB_EnregistrerCallbackSuccess", "FEN_SCan.CB_EnregistrerCallbackErreur")
+      //
+      PROCEDURE ZebraDWEffacerCallbackDeScan(sCallbackSucces est une chaine, sCallbackError est une chaine)
+      _DWEffacerCallbackDeScan(faux, sCallbackSucces,sCallbackError)
+     type : 458752
+   -
+     name : ZebraDWVerifierSiLeProfilExiste
+     procedure_id : 2001298706609727176
+     type_code : 15
+     code : |1+
+      // Résumé : Vérifie si un profil existe déjà.
+      // Syntaxe :
+      //ZebraDWVerifierSiLeProfilExiste (<sNomDuProfil> est chaîne, <nTimeoutMs> est entier, <sCallbackProfilExiste> est chaîne, <sCallbackError> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDuProfil (chaîne UNICODE) : Nom du profil (visible dans l'interface graphique DataWedge)
+      //	nTimeoutMs (entier) : Durée d'attente maximale en ms en cas de non réponse de DataWedge avant TimeOut
+      //	sCallbackProfilExiste (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_ProfilExiste(sNomDuProfil est une chaine, bProfilExiste est un booléen). bProfilExiste est à Vrai si le profil existe déjà et à Faux s'il n'existe pas.
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine, sErreur est une chaîne
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWVerifierSiLeProfilExiste("monProfilDataWedge", 5000,  "FEN_Scan.CB_ProfilExiste", "FEN_Scan.CB_Erreur")
+      //
+      PROCEDURE ZebraDWVerifierSiLeProfilExiste(sNomDuProfil est une chaine, nTimeoutMs est un entier, sCallbackProfilExiste est une chaine, sCallbackError est une chaine)
+      _DWVerifierSiLeProfilExiste(sNomDuProfil,nTimeoutMs,sCallbackProfilExiste,sCallbackError)
+      
+     type : 458752
+   -
+     name : ZebraDWFacileDemarrer
+     internal_properties : CAAAAAgAAAAbYRlSk7nYTm3Xq19tFBSgHxQPbNMQgD+8VixzB1RItAMgyDzdLr/OxS8GQij0pYJYslpu+ZHht3B6qe+hvz1EQa4oNswwH3Ao9fiu39hdixtoyXo0eZEpXPcX2KRjVFBrzPFIA+Dxmqm7u1/fF//DqTVpN+dOxLvvncV6AGK7E+u0XOZZexIoxWqKA+4GzWFNntHRrhOUauyqL0BSab47AwVVtvToRpm1Yi5lXjK6mUfkCA==
+     procedure_id : 2035443602183512698
+     type_code : 15
+     code : |1+
+      // Résumé : Démarre l'écoute des opérations de scan
+      // L'appel a cette méthode permet de recevoir les résultats de scan
+      // dans la procédure de récupération définie dans le 1er argument de la méthode ZebraDWFacileInitialiserEtDemarrer
+      // cette méthode doit être appelée dès lors que l'on souhaite recevoir les donnée scannées
+      // en général, on la place dans l'évènement de mise au premier plan et dans la prise de focus de la fenêtre 
+      // Pour stopper l'écoute des évènements, utiliser la procédure DWFacileStopper
+      // 
+      // Syntaxe :
+      //ZebraDWFacileDemarrer (<sCallbackDeScan> est chaîne)
+      //
+      // Paramètres :
+      //	sCallbackDeScan (chaîne UNICODE) : Procédure qui sera exécutée à chaque scan. Le prototype de la procédure est le suivant: PROCÉDURE CB_TraiteScan(sData est une chaine, sSymbology est une chaine)
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWFacileDemarrer("FEN_Scan.CB_TraiteScan")
+      //
+      PROCEDURE ZebraDWFacileDemarrer(sCallbackDeScan est une chaîne)
+      gsDWFacileCallbackDeScan = sCallbackDeScan;
+      ZebraDWEnregistrerCallbackDeScan(gsDWFacileCallbackDeScan, "","")
+     type : 458752
+   -
+     name : ZebraDWFacileStopper
+     internal_properties : CAAAAAgAAACDeRE6j+EjRO8bxcuf9va4wTQoCE+kLItwCmCHi4hc2E/V7m7v7i2adZ2e+LzYobzwPGz8v6Wbb+ScUd2h/23a7WRmCB7Atewo6/C0m5Sh9eu6e9BupSNh2IZEvYFYef1GN3odyN30f6KOrMB4eDx84OyWGBAXSzDgjNJ/1R9kuF437Qu20G21ZiUzfKdvWnIc4k11in/47oCeM6T+5Sp3LB58nROL4xSQh+FMQu6S8T/ccA==
+     procedure_id : 2035443718147722382
+     type_code : 15
+     code : |1+
+      // Résumé : Stoppe l'écoute des évènements de scan
+      // Cette méthode doit être placée dans l'évènement de mise en arrière plan de la fenêtre ou de perte de focus
+      // Ainsi une fenêtre devenue non visible ou fermée ne recevra plus d'évènement de scan
+      // Ne pas utiliser cette méthode lors de la fermeture de fenêtre, mais plutôt la méthode ZebraDWFacileNettoyerEtStopper
+      // Syntaxe :
+      //ZebraDWFacileStopper ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWFacileStopper()
+      //
+      //	bFermeture (booléen) : mettre à vrai si la méthode est exécutée à la fermeture d'une fenêtre
+      PROCEDURE ZebraDWFacileStopper()
+      // On n'a pas besoin de supprimer le Broadcast receiver
+      ZebraDWEffacerCallbackDeScan("","")
+     type : 458752
+   -
+     name : AndroidObtenirLeNomDuPackageDeLApplication
+     internal_properties : CAAAAAgAAABXETaJ1b2fMnDLcAzh1TLpUkd/zG/43Fmn1Sb0rJGJkdcaCFwt1uVtdnXzCog2W8TNeNiYhr4j9wNSWQrb9ZHx+MzVAHwtNRelz7txuX9LN9hbWTLxFYMHdi/eiumxje++uZZDYCYSWoiqq/A=
+     procedure_id : 2035794251936702907
+     type_code : 15
+     code : |1+
+      // Résumé : Renvoi le package name de l'application (ex: com.zebra.datawedgesample)
+      // Syntaxe :
+      //[ <Résultat> = ] AndroidObtenirLeNomDuPackageDeLApplication ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	Type indéterminé : Renvoie le nom du package de l'application sous la forme d'une chaine
+      //
+      // Exemple :
+      // sNomDuPackage est une chaîne = AndroidObtenirLeNomDuPackageDeLApplication()
+      //
+      PROCEDURE AndroidObtenirLeNomDuPackageDeLApplication()
+      RENVOYER _DWObtenirLeNomDuPackage()
+     type : 458752
+   -
+     name : _DWFacileSuccesInitialiserProfil
+     procedure_id : 2035825381898173034
+     type_code : 15
+     code : |1+
+      
+      PROCEDURE PRIVEE _DWFacileSuccesInitialiserProfil(sNomDuProfil est une chaine)
+      _DWLogMessage("_DWFacileSuccesInitialiserProfil")
+      //ZebraDWFacileDemarrer()
+      ExécuteThreadPrincipal(gsDWFacileCallbackSucces, sNomDuProfil)
+     type : 458752
+   -
+     name : ZebraDWNettoyerBroadcastReceiver
+     internal_properties : CAAAAAgAAABCm7FLaK511xvyoLZH8kd1qeEHNDPp8vMfeZ7JsV+NRtsq971cOR+BfGuq3EBa77EN1AeHodgQNwmjScLr1Dl0iXa6+/qE6gDzRGv/ZV+RPimKKvFLLIyLWIxcx0twQUM8WcRlcEVcV4pGzqRkHIBCFt6kDCwBaY5GRHrrubvQHghczkuePdcSnzscO8+ZQH81dKzcBeflZ5SKEJKkA5cIPQ0B
+     procedure_id : 2036096767930652660
+     type_code : 15
+     code : |1-
+      // Résumé : Supprime le broadcast receiver associé à la fenêtre.
+      // Le broadcast receiver est un objet Android permettant la réception des résultats de scan.
+      // Il est utilisé dans les librairies sous-jacentes. 
+      // Il est nécessaire d'appeler cette méthode lorsque l'on est dans le traitement de fermeture d'une fenêtre afin d'éviter les fuites mémoire.
+      // Syntaxe :
+      // ZebraDWNettoyerBroadcastReceiver (sCallbackSucces> est une chaîne, sCallbackError est chaîne)
+      //
+      // Paramètres :
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWNettoyerBroadcastReceiver("FEN_Scan.CB_EnregistrerCallbackSuccess", "FEN_SCan.CB_EnregistrerCallbackErreur").
+      //
+      PROCEDURE ZebraDWNettoyerBroadcastReceiver(sCallbackSucces est une chaine, sCallbackError est une chaine)
+      _DWEffacerCallbackDeScan(Vrai, sCallbackSucces, sCallbackError)
+     type : 458752
+   -
+     name : _DWFacileNettoyerBroadcastReceiverSuccess
+     internal_properties : CAAAAAgAAACQ45xTf4XdtwKZ9WZyRRlCnTXrBffA69hpseWC3yK/8/kYZo/QJ1FBpfjkFJUhCePAcyNkgNvPA49Hm4m2HEEPjQvh8b0uagwukEnqlIsgEkzYCWVVBtmYe3G0vRyzZWRREGdYwlkhPwwtEr1BEG8a4sZSxDFXZr3wfeIfenkRfOm9V/pkJAM+ZvtrrOvVUFqMxnvVj+pBRRFchlXZH7gjBWGwu7RsseaHogu86rVxlwRHhxVD/s65zb9pjet/yX4ErYx2zbdmfWkCwwnSlLX14/y+GF/CUGHgo0tW
+     procedure_id : 2036115751688817138
+     type_code : 15
+     code : |1+
+      // Résumé : Procédure exécutée depuis ZebraDWFacileNettoyerEtStopper lorsque la méthode ZebraDWNettoyerBroadcastReceiver se termine avec succès
+      // Syntaxe :
+      //_DWFacileNettoyerBroadcastReceiverSuccess (<sNomDeLaProcedure> est chaîne)
+      //
+      // Paramètres :
+      //	sNomDeLaProcedure (chaîne UNICODE) : 
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE PRIVÉE _DWFacileNettoyerBroadcastReceiverSuccess(sNomDeLaProcedure est une chaine)
+      // Suppression du profil
+      ZebraDWEffacerUnProfil(AndroidObtenirLeNomDuPackageDeLApplication(), gnDWFacileTimeOut, gsDWFacileCallbackSucces, gsDWFacileCallbackErreur)
+      
+      
+     type : 458752
+   -
+     name : ZebraDWFacileNettoyer
+     internal_properties : CAAAAAgAAABxQxSf3/UqzlIpJJaBjaQjvKGVpDECvFXZ00omZNHH5yWIjmxrdGnhrC8/8FTipc5D/lKcgLjgMsiXHkMSXhx+l19i8c+Srv5eeOgCSFB2pHfSpkt0wkx+Y1T7u/gCIEQ1GINsC064NDqcTRY=
+     procedure_id : 2036166548325384740
+     type_code : 15
+     code : |1+
+      // Résumé : Cette procédure va stopper et nettoyer DWFacile en supprimant la référence
+      // vers la procédure callback de traitement de scan et en nettoyant le broadcast receiver Android 
+      // Syntaxe :
+      // ZebraDWFacileNettoyer (sCallbackSucces> est une chaîne, sCallbackError est chaîne)
+      //
+      // Paramètres :
+      //	sCallbackSucces (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas de succès. Prototype de la procédure : CB_Succes(sNomDuProfil est une chaine)
+      //	sCallbackError (chaîne UNICODE) : Indique le nom d'une procédure WL à exécuter en cas d'erreur. Prototype de la procédure : CB_Erreur(sNomDuProfil est une chaine, sMessage est une chaine
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // ZebraDWFacileNettoyer("FEN_Scan.CB_NettoyerCallbackSuccess", "FEN_SCan.CB_NettoyerCallbackErreur").
+      //
+      PROCEDURE ZebraDWFacileNettoyer(sCallbackSucces est une chaine, sCallbackError est une chaine)
+      ZebraDWNettoyerBroadcastReceiver(sCallbackSucces,sCallbackError)
+     type : 458752
+   -
+     name : _DWObtenirLeNomDuPackage
+     procedure_id : 2047575828162333881
+     type_code : 15
+     code : |1-
+      public static String _DWObtenirLeNomDuPackage()
+      {
+      	Context context = getApplicationContext();
+      	String sPackageName = context.getPackageName();
+      	return sPackageName;
+      }
+     language : Java
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_SansNom1
+resources :
+ string_res :
+  identifier : 0x1fc7bfb504baccba
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ
